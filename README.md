@@ -1,70 +1,72 @@
-# 📘 Project Title
-*Yet to be decided*
+# Smart Waste Management System
+
+## 📌 Project Overview
+The Smart Waste Management System is a Java-based web application designed to improve waste reporting and collection efficiency. It allows users to report waste issues, administrators to manage operations, and workers to handle assigned tasks.
+
+The system follows the **MVC (Model-View-Controller)** architecture and uses **Java Servlets, JSP, and MySQL** for dynamic web development.
 
 ---
 
-## 📖 Introduction
-This project is developed as part of the **CS5054NT Advanced Programming and Technologies** coursework at London Metropolitan University.  
-
-- **Purpose:** Describe why the system is being built.  
-- **Audience:** Define who will use the application (e.g., students, admins, customers).  
-- **Aims & Objectives:** Outline the main goals of the project.  
-- **Features (one-line each):**
-  - User registration & login  
-  - Role-based access control  
-  - CRUD operations for admin dashboard  
-  - Responsive UI with JSP & CSS  
-  - Database integration with MySQL  
+## 🎯 Objectives
+- Provide an easy platform for users to report waste issues
+- Enable administrators to manage waste reports and assign tasks
+- Allow workers to update the status of assigned tasks
+- Improve waste management efficiency and tracking
 
 ---
 
+## 🧩 System Modules
 
-## 🗂️ Project Structure
-project-root/
-│── src/                # Java source files
-│── web/                # JSP pages, CSS, JS
-│── resources/          # Config files, properties
-│── database/           # SQL schema, ER diagrams
-│── docs/               # Report drafts, wireframes
-│── .gitignore
-│── README.md
+### 👤 User Module
+- Register account
+- Login securely
+- Report waste issues
+- View submitted reports
+- Track waste status
 
+### 🛠️ Admin Module
+- Admin login
+- View all waste reports
+- Assign tasks to workers
+- Manage users and workers
+- Monitor system activity
 
----
-
-## ⚙️ Technologies Used
-- **Backend:** Java, Java EE  
-- **Frontend:** JSP, CSS, JavaScript (minimal)  
-- **Database:** MySQL  
-- **Architecture:** MVC (Model-View-Controller)  
-- **Tools:** IntelliJ IDEA, GitHub  
-
-## 🖼️ Wireframes & UI
-*(Add screenshots or diagrams later)*  
-- Login Page  
-- Admin Dashboard  
-- User Portal  
+### 👷 Worker Module
+- Worker login
+- View assigned tasks
+- Accept/reject tasks
+- Update task status
+- View work history
 
 ---
 
-## 📊 Database Design
-- **Tables:** Students, Courses, Enrollments, Users, etc.  
-- **ER Diagram:** *(Insert diagram image here)*  
-- **Normalization:** Ensure minimal redundancy  
-
----
-## 🔑 Authentication & Authorization
-- Secure login with encryption  
-- Role-based access (Admin vs User)  
-- Session management & filters  
+## ⚙️ Core Features
+- Authentication & Authorization (role-based access)
+- Waste Reporting System
+- Waste Tracking (Pending → Completed)
+- Task Assignment System
+- Dashboard & Reporting
 
 ---
 
-## 🧪 Test Cases
-*(Add detailed test tables later)*  
-- User registration validation  
-- Login authentication  
-- CRUD operations for admin dashboard  
-- Error handling & exception cases  
+## 🏗️ Technologies Used
+
+- **Backend:** Java (Servlets, JDBC)
+- **Frontend:** JSP, CSS, JavaScript
+- **Architecture:** MVC
+- **Database:** MySQL
+- **Server:** Apache Tomcat
+- **Build Tool:** Maven
+- **IDE:** IntelliJ IDEA
+- **Version Control:** Git & GitHub
+
+---
+
+## 🗄️ Database Tables (Basic)
+
+- Users (id, name, email, password, role)
+- Waste Reports (id, location, type, status, user_id)
+- Workers (id, name, status)
+- Assignments (id, waste_id, worker_id, status)
 
 ---

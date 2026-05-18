@@ -1,4 +1,4 @@
-package com.waste.smartwastemanagement.utils;
+package com.intelliwaste.utils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

@@ -1,4 +1,4 @@
-package com.waste.smartwastemanagement.utils;
+package com.intelliwaste.utils;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;

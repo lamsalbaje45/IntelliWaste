@@ -49,8 +49,9 @@ public class UserServlet extends HttpServlet {
 
             boolean success = userDAO.registerUser(user);
             if (success) {
-                request.setAttribute("success", "Account created. Please log in.");
-                request.getRequestDispatcher("/views/login.jsp").forward(request, response);
+                HttpSession session = request.getSession(true);
+                session.setAttribute("success", "Account created. Please log in.");
+                response.sendRedirect(ctx + "/views/login.jsp");
             } else {
                 request.setAttribute("error", "Registration failed. Please try again.");
                 request.getRequestDispatcher("/views/register.jsp").forward(request, response);

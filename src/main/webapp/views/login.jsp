@@ -131,6 +131,10 @@
         <h2>Login</h2>
         <p>Access your dashboard and continue making impact.</p>
 
+        <% if (session.getAttribute("success") != null) { %>
+            <p class="success"><%= session.getAttribute("success") %></p>
+            <% session.removeAttribute("success"); %>
+        <% } %>
         <% if (request.getAttribute("error") != null) { %>
             <p class="error"><%= request.getAttribute("error") %></p>
         <% } %>

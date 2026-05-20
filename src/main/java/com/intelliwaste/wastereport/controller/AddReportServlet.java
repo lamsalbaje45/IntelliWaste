@@ -49,7 +49,11 @@ public class AddReportServlet extends HttpServlet {
                     return;
                 }
                 fileName = new File(filePart.getSubmittedFileName()).getName();
-                String uploadPath = getServletContext().getRealPath("/uploads");
+                String uploadPath = System.getProperty("user.dir")
+                        + File.separator + "src"
+                        + File.separator + "main"
+                        + File.separator + "webapp"
+                        + File.separator + "uploads";
                 File uploadDir = new File(uploadPath);
                 if (!uploadDir.exists())
                     uploadDir.mkdirs();

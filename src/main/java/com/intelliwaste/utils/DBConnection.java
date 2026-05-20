@@ -1,10 +1,10 @@
-package com.waste.smartwastemanagement.utils;
+package com.intelliwaste.utils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class DBConnection {
-    private static final String DB_URL = "jdbc:mysql://localhost:3305/swms";
+    private static final String DB_URL = "jdbc:mysql://localhost:3305/intelliwaste_db";
     private static final String DB_USER = "root";
     private static final String DB_PASSWORD = "1234";
 

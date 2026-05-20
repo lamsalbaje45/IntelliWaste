@@ -214,6 +214,70 @@
         .btn-clear:hover {
             background: #e4f0e8;
         }
+        .action-cell {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        .action-col {
+            width: 210px;
+            min-width: 210px;
+            white-space: nowrap;
+        }
+        .assign-form {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .action-buttons {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: nowrap;
+        }
+        .user-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn-action {
+            background: #2d5f3f;
+            color: #fff;
+            border: none;
+            padding: 0 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 36px;
+            line-height: 36px;
+            min-width: 90px;
+        }
+        .action-select {
+            padding: 8px 10px;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            background: #fff;
+            min-height: 36px;
+            min-width: 120px;
+            appearance: none;
+            background-image:
+                linear-gradient(45deg, transparent 50%, #2d5f3f 50%),
+                linear-gradient(135deg, #2d5f3f 50%, transparent 50%),
+                linear-gradient(to right, #fff, #fff);
+            background-position:
+                calc(100% - 16px) 14px,
+                calc(100% - 10px) 14px,
+                calc(100% - 32px) 0.5em;
+            background-size: 6px 6px, 6px 6px, 1px 1.6em;
+            background-repeat: no-repeat;
+            padding-right: 34px;
+        }
     </style>
 </head>
 <body>
@@ -299,7 +363,7 @@
                         <th>Priority</th>
                         <th>Status</th>
                         <th>Reported</th>
-                        <th>Action</th>
+                        <th class="action-col">Action</th>
                         </tr>
                         <c:forEach var="r" items="${allReports}">
                             <tr>
@@ -310,20 +374,29 @@
                             <td>${r.priority}</td>
                             <td>${r.status}</td>
                             <td>${r.created_at}</td>
-                            <td>
-                                <a href="<%= ctx %>/viewReportById?id=${r.report_id}">View</a>
-                                <c:if test="${r.status == 'PENDING'}">
-                                    <form action="<%= ctx %>/assignReport" method="post" style="display:inline; margin-left: 6px;">
-                                        <input type="hidden" name="report_id" value="${r.report_id}"/>
-                                        <select name="worker_id" required>
-                                            <option value="">Worker</option>
-                                            <c:forEach var="w" items="${workers}">
-                                                <option value="${w.id}">${w.name}</option>
-                                            </c:forEach>
-                                        </select>
-                                        <button>Assign</button>
-                                    </form>
-                                </c:if>
+                            <td class="action-col">
+                                <div class="action-cell">
+                                    <c:if test="${r.status == 'PENDING'}">
+                                        <form action="<%= ctx %>/assignReport" method="post" class="assign-form">
+                                            <input type="hidden" name="report_id" value="${r.report_id}"/>
+                                            <select name="worker_id" required class="action-select">
+                                                <option value="">Worker</option>
+                                                <c:forEach var="w" items="${workers}">
+                                                    <option value="${w.id}">${w.name}</option>
+                                                </c:forEach>
+                                            </select>
+                                            <div class="action-buttons">
+                                                <button class="btn-action" type="submit">Assign</button>
+                                                <a class="btn-action" href="<%= ctx %>/viewReportById?id=${r.report_id}">View</a>
+                                            </div>
+                                        </form>
+                                    </c:if>
+                                    <c:if test="${r.status != 'PENDING'}">
+                                        <div class="action-buttons">
+                                            <a class="btn-action" href="<%= ctx %>/viewReportById?id=${r.report_id}">View</a>
+                                        </div>
+                                    </c:if>
+                                </div>
                             </td>
                             </tr>
                         </c:forEach>
@@ -419,11 +492,11 @@
                                         <form action="<%= ctx %>/admin/users" method="post" style="display:inline;">
                                             <input type="hidden" name="action" value="updateRole" />
                                             <input type="hidden" name="user_id" value="${usr.id}" />
-                                            <select name="role" required>
+                                            <select name="role" required class="action-select">
                                                 <option value="USER" ${usr.role == 'USER' ? 'selected' : ''}>Citizen</option>
                                                 <option value="WORKER" ${usr.role == 'WORKER' ? 'selected' : ''}>Worker</option>
                                             </select>
-                                            <button type="submit">Update</button>
+                                            <button type="submit" class="btn-action">Update</button>
                                         </form>
                                     </c:otherwise>
                                 </c:choose>

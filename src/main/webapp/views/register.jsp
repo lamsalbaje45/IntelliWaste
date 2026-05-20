@@ -144,8 +144,9 @@
             <input id="name" type="text" name="name" placeholder="Full name" required/>
             <label for="email">Email</label>
             <input id="email" type="email" name="email" placeholder="you@example.com" required/>
-            <label for="phone">Phone (optional)</label>
-            <input id="phone" type="text" name="phone" placeholder="Phone number"/>
+                 <label for="phone">Phone (optional)</label>
+                 <input id="phone" type="text" name="phone" placeholder="Phone number"
+                     pattern="\\d{7,15}" title="Phone must be 7-15 digits"/>
             <label for="address">Address (optional)</label>
             <input id="address" type="text" name="address" placeholder="Street or neighborhood"/>
             <label for="password">Password</label>

@@ -12,6 +12,13 @@ import java.io.IOException;
 @WebServlet("/user-auth")
 public class UserServlet extends HttpServlet {
 
+    private boolean isValidPhone(String phone) {
+        if (phone == null || phone.trim().isEmpty()) {
+            return true;
+        }
+        return phone.matches("\\d{7,15}");
+    }
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -40,6 +47,11 @@ public class UserServlet extends HttpServlet {
             }
             if (userDAO.emailExists(email)) {
                 request.setAttribute("error", "An account with that email already exists");
+                request.getRequestDispatcher("/views/register.jsp").forward(request, response);
+                return;
+            }
+            if (!isValidPhone(phone)) {
+                request.setAttribute("error", "Phone must be 7-15 digits");
                 request.getRequestDispatcher("/views/register.jsp").forward(request, response);
                 return;
             }
@@ -115,6 +127,11 @@ public class UserServlet extends HttpServlet {
             if (name == null || name.trim().isEmpty()) {
                 session.setAttribute("error", "Name is required");
                 response.sendRedirect(ctx + "/views/" + currentUser.getRole().toLowerCase() + "/dashboard.jsp");
+                return;
+            }
+            if (!isValidPhone(phone)) {
+                session.setAttribute("error", "Phone must be 7-15 digits");
+                response.sendRedirect(ctx + "/views/profile.jsp");
                 return;
             }
 

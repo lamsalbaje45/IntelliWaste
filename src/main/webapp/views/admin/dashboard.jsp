@@ -415,7 +415,7 @@
                         </c:forEach>
                     </table>
                 </div>
-                <c:url var="reportsPrevUrl" value="${pageContext.request.requestURI}">
+                <c:url var="reportsPrevUrl" value="/views/admin/dashboard.jsp">
                     <c:param name="reportsPage" value="${reportsPage - 1}" />
                     <c:param name="usersPage" value="${usersPage}" />
                     <c:param name="reportSearch" value="${reportSearch}" />
@@ -425,7 +425,7 @@
                     <c:param name="userSearch" value="${userSearch}" />
                     <c:param name="userRole" value="${userRole}" />
                 </c:url>
-                <c:url var="reportsNextUrl" value="${pageContext.request.requestURI}">
+                <c:url var="reportsNextUrl" value="/views/admin/dashboard.jsp">
                     <c:param name="reportsPage" value="${reportsPage + 1}" />
                     <c:param name="usersPage" value="${usersPage}" />
                     <c:param name="reportSearch" value="${reportSearch}" />
@@ -525,7 +525,7 @@
                         </c:forEach>
                     </table>
                 </div>
-                <c:url var="usersPrevUrl" value="${pageContext.request.requestURI}">
+                <c:url var="usersPrevUrl" value="/views/admin/dashboard.jsp">
                     <c:param name="reportsPage" value="${reportsPage}" />
                     <c:param name="usersPage" value="${usersPage - 1}" />
                     <c:param name="reportSearch" value="${reportSearch}" />
@@ -535,7 +535,7 @@
                     <c:param name="userSearch" value="${userSearch}" />
                     <c:param name="userRole" value="${userRole}" />
                 </c:url>
-                <c:url var="usersNextUrl" value="${pageContext.request.requestURI}">
+                <c:url var="usersNextUrl" value="/views/admin/dashboard.jsp">
                     <c:param name="reportsPage" value="${reportsPage}" />
                     <c:param name="usersPage" value="${usersPage + 1}" />
                     <c:param name="reportSearch" value="${reportSearch}" />

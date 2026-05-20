@@ -46,9 +46,10 @@
             </div>
             <div class="form-grid" style="margin-top: 14px;">
                 <div>
-                    <label>Phone</label>
-                    <input type="text" name="phone" value="<%= u.getPhone() == null ? "" : u.getPhone() %>"
-                           style="width: 100%; padding: 10px; margin-top: 4px; box-sizing: border-box;" />
+                          <label>Phone</label>
+                          <input type="text" name="phone" value="<%= u.getPhone() == null ? "" : u.getPhone() %>"
+                              pattern="\\d{7,15}" title="Phone must be 7-15 digits"
+                              style="width: 100%; padding: 10px; margin-top: 4px; box-sizing: border-box;" />
                 </div>
                 <div>
                     <label>Address</label>

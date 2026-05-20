@@ -1,7 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%
     String code = request.getParameter("code");
-    if (code == null) code = "500";
+    if (code == null) {
+        Object status = request.getAttribute("jakarta.servlet.error.status_code");
+        if (status == null) {
+            status = request.getAttribute("javax.servlet.error.status_code");
+        }
+        code = (status != null) ? status.toString() : "500";
+    }
     String title, message;
     switch (code) {
         case "403":

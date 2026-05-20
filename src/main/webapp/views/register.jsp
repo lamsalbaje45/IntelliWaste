@@ -76,6 +76,8 @@
         }
         .auth-card h2 { margin: 0 0 6px; color: var(--ink); font-size: 26px; }
         .auth-card p { margin: 0 0 18px; color: #425f55; }
+        .auth-card .error { color: #c92a2a; }
+        .auth-card .success { color: #2f9e44; }
         label { display: block; font-weight: 600; margin: 10px 0 6px; }
         input {
             width: 100%;
@@ -132,9 +134,6 @@
         <h2>Create your account</h2>
         <p>It takes a minute. You can start reporting right away.</p>
 
-        <% if (request.getAttribute("success") != null) { %>
-            <p class="success"><%= request.getAttribute("success") %></p>
-        <% } %>
         <% if (request.getAttribute("error") != null) { %>
             <p class="error"><%= request.getAttribute("error") %></p>
         <% } %>

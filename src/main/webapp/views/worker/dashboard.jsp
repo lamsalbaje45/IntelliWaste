@@ -156,6 +156,27 @@
         .btn-clear:hover {
             background: #e4f0e8;
         }
+        .action-btn {
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #fff;
+            text-align: center;
+        }
+        .action-accept {
+            background: #2d5f3f;
+            min-width: 120px;
+        }
+        .action-reject {
+            background: #c92a2a;
+            min-width: 120px;
+        }
+        .action-complete {
+            background: #1864ab;
+            min-width: 140px;
+        }
     </style>
 </head>
 <body>
@@ -254,13 +275,13 @@
                                     <form action="<%= ctx %>/workerAction" method="post" style="display:inline;">
                                         <input type="hidden" name="assignment_id" value="${a.assignment_id}"/>
                                         <input type="hidden" name="action" value="accept"/>
-                                        <button style="background:#2d5f3f;color:white;border:none;padding:6px 12px;border-radius:3px;cursor:pointer;">Accept</button>
+                                        <button class="action-btn action-accept">Accept</button>
                                     </form>
                                     <form action="<%= ctx %>/workerAction" method="post" style="display:inline;">
                                         <input type="hidden" name="assignment_id" value="${a.assignment_id}"/>
                                         <input type="hidden" name="action" value="reject"/>
                                         <input type="hidden" name="notes" value="Rejected by worker"/>
-                                        <button style="background:#c92a2a;color:white;border:none;padding:6px 12px;border-radius:3px;cursor:pointer;">Reject</button>
+                                        <button class="action-btn action-reject">Reject</button>
                                     </form>
                                     </span>
                                 </c:if>
@@ -270,7 +291,7 @@
                                         <input type="hidden" name="assignment_id" value="${a.assignment_id}"/>
                                         <input type="hidden" name="action" value="complete"/>
                                         <input type="hidden" name="notes" value=""/>
-                                        <button style="background:#1864ab;color:white;border:none;padding:6px 12px;border-radius:3px;cursor:pointer;">Mark Completed</button>
+                                        <button class="action-btn action-complete">Mark Completed</button>
                                     </form>
                                 </c:if>
                                 <c:if test="${a.status == 'COMPLETED' || a.status == 'REJECTED'}">

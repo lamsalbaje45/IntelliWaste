@@ -311,23 +311,19 @@
                             <td>${r.status}</td>
                             <td>${r.created_at}</td>
                             <td>
-                                <c:choose>
-                                    <c:when test="${r.status == 'PENDING'}">
-                                        <form action="<%= ctx %>/assignReport" method="post" style="display:inline;">
-                                            <input type="hidden" name="report_id" value="${r.report_id}"/>
-                                            <select name="worker_id" required>
-                                                <option value="">Worker</option>
-                                                <c:forEach var="w" items="${workers}">
-                                                    <option value="${w.id}">${w.name}</option>
-                                                </c:forEach>
-                                            </select>
-                                            <button>Assign</button>
-                                        </form>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <a href="<%= ctx %>/viewReportById?id=${r.report_id}">View</a>
-                                    </c:otherwise>
-                                </c:choose>
+                                <a href="<%= ctx %>/viewReportById?id=${r.report_id}">View</a>
+                                <c:if test="${r.status == 'PENDING'}">
+                                    <form action="<%= ctx %>/assignReport" method="post" style="display:inline; margin-left: 6px;">
+                                        <input type="hidden" name="report_id" value="${r.report_id}"/>
+                                        <select name="worker_id" required>
+                                            <option value="">Worker</option>
+                                            <c:forEach var="w" items="${workers}">
+                                                <option value="${w.id}">${w.name}</option>
+                                            </c:forEach>
+                                        </select>
+                                        <button>Assign</button>
+                                    </form>
+                                </c:if>
                             </td>
                             </tr>
                         </c:forEach>

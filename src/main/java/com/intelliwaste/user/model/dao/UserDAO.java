@@ -21,7 +21,7 @@ public class UserDAO implements UserInterface {
         String sql = "INSERT INTO user(name, email, password, role, phone, address) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, user.getName());
             ps.setString(2, user.getEmail());
             ps.setString(3, user.getPassword());
@@ -41,7 +41,7 @@ public class UserDAO implements UserInterface {
         String sql = "SELECT * FROM user WHERE email = ?";
 
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -69,7 +69,7 @@ public class UserDAO implements UserInterface {
         String sql = "SELECT * FROM user WHERE role = ? ORDER BY name";
 
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, role);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -94,7 +94,7 @@ public class UserDAO implements UserInterface {
         String sql = "SELECT * FROM user ORDER BY id";
 
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 users.add(new User(
@@ -116,7 +116,7 @@ public class UserDAO implements UserInterface {
     public User findById(int id) {
         String sql = "SELECT * FROM user WHERE id = ?";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -139,7 +139,7 @@ public class UserDAO implements UserInterface {
     public boolean deleteUser(int id) {
         String sql = "DELETE FROM user WHERE id = ?";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
@@ -152,9 +152,25 @@ public class UserDAO implements UserInterface {
     public boolean updateUserRole(int id, String role) {
         String sql = "UPDATE user SET role = ? WHERE id = ? AND role <> 'ADMIN'";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, role);
             ps.setInt(2, id);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean updateUserProfile(int id, String name, String phone, String address) {
+        String sql = "UPDATE user SET name = ?, phone = ?, address = ? WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, name);
+            ps.setString(2, phone);
+            ps.setString(3, address);
+            ps.setInt(4, id);
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
@@ -165,7 +181,7 @@ public class UserDAO implements UserInterface {
     public boolean emailExists(String email) {
         String sql = "SELECT 1 FROM user WHERE email = ?";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, email);
             return ps.executeQuery().next();
         } catch (Exception e) {

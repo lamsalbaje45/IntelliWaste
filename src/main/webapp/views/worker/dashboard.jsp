@@ -194,6 +194,7 @@
         </div>
     </div>
 
+
     <!-- Assignments table -->
     <div style="background: white; padding: 24px; border-radius: 6px;">
         <h2 style="margin-top: 0; color: #2d5f3f;">My Assignments</h2>

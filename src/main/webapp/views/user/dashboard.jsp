@@ -186,6 +186,7 @@
         </div>
     </div>
 
+
     <!-- Submit new report -->
     <div style="background: white; padding: 24px; border-radius: 6px; margin-bottom: 24px;">
         <h2 style="margin-top: 0; color: #2d5f3f;">Report a Waste Issue</h2>

@@ -132,6 +132,7 @@
                        :                          "/views/user/dashboard.jsp";
         %>
             <a class="nav-pill" href="<%= navCtx + dash %>">Home</a>
+            <a class="nav-pill" href="<%= navCtx %>/views/profile.jsp">My Profile</a>
             <a class="nav-pill" href="<%= navCtx %>/viewReports">All Reports</a>
         <% } %>
     </div>

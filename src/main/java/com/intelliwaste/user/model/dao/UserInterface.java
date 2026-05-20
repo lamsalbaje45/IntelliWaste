@@ -17,4 +17,6 @@ public interface UserInterface {
     boolean deleteUser(int id);
 
     boolean updateUserRole(int id, String role);
+
+    boolean updateUserProfile(int id, String name, String phone, String address);
 }

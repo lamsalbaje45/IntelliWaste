@@ -99,6 +99,41 @@ public class UserServlet extends HttpServlet {
             response.addCookie(emailCookie);
 
             response.sendRedirect(ctx + "/views/login.jsp");
+        } else if ("updateProfile".equals(action)) {
+            HttpSession session = request.getSession(false);
+            User currentUser = (session != null) ? (User) session.getAttribute("user") : null;
+            if (currentUser == null) {
+                response.sendRedirect(ctx + "/views/login.jsp");
+                return;
+            }
+
+            String name = request.getParameter("name");
+            String phone = request.getParameter("phone");
+            String address = request.getParameter("address");
+
+            if (name == null || name.trim().isEmpty()) {
+                session.setAttribute("error", "Name is required");
+                response.sendRedirect(ctx + "/views/" + currentUser.getRole().toLowerCase() + "/dashboard.jsp");
+                return;
+            }
+
+            boolean updated = userDAO.updateUserProfile(
+                    currentUser.getId(),
+                    name.trim(),
+                    phone == null ? "" : phone.trim(),
+                    address == null ? "" : address.trim());
+
+            if (updated) {
+                currentUser.setName(name.trim());
+                currentUser.setPhone(phone == null ? "" : phone.trim());
+                currentUser.setAddress(address == null ? "" : address.trim());
+                session.setAttribute("user", currentUser);
+                session.setAttribute("success", "Profile updated successfully");
+            } else {
+                session.setAttribute("error", "Failed to update profile");
+            }
+
+            response.sendRedirect(ctx + "/views/" + currentUser.getRole().toLowerCase() + "/dashboard.jsp");
         }
     }
 }

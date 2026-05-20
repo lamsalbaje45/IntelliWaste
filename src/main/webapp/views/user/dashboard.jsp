@@ -104,6 +104,51 @@
 <head>
     <title>My Dashboard - IntelliWaste</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        .filter-bar {
+            margin-bottom: 12px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+        }
+        .filter-input,
+        .filter-select {
+            padding: 8px 10px;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            background: #fff;
+            min-height: 36px;
+        }
+        .filter-input {
+            min-width: 220px;
+        }
+        .btn-filter {
+            background: #2d5f3f;
+            color: #fff;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .btn-clear {
+            color: #2d5f3f;
+            background: #eef6f0;
+            border: 1px solid #cfe3d6;
+            padding: 8px 14px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .btn-clear:hover {
+            background: #e4f0e8;
+        }
+    </style>
 </head>
 <body>
 <jsp:include page="../navbar.jsp"/>
@@ -185,29 +230,29 @@
     <!-- My reports table -->
     <div style="background: white; padding: 24px; border-radius: 6px;">
         <h2 style="margin-top: 0; color: #2d5f3f;">My Reports</h2>
-        <form method="get" action="<%= request.getRequestURI() %>" style="margin-bottom: 12px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
-            <input type="text" name="reportSearch" value="${reportSearch}" placeholder="Search reports..." style="padding: 8px; min-width: 220px;" />
-            <select name="reportCategory" style="padding: 8px;">
+        <form method="get" action="<%= request.getRequestURI() %>" class="filter-bar">
+            <input type="text" name="reportSearch" value="${reportSearch}" placeholder="Search reports..." class="filter-input" />
+            <select name="reportCategory" class="filter-select">
                 <option value="">All Categories</option>
                 <% for (Category c : categories) { %>
                     <option value="<%= c.getName() %>" <%= c.getName().equalsIgnoreCase(reportCategory) ? "selected" : "" %>><%= c.getName() %></option>
                 <% } %>
             </select>
-            <select name="reportPriority" style="padding: 8px;">
+            <select name="reportPriority" class="filter-select">
                 <option value="">All Priorities</option>
                 <option value="LOW" ${reportPriority == 'LOW' ? 'selected' : ''}>Low</option>
                 <option value="MEDIUM" ${reportPriority == 'MEDIUM' ? 'selected' : ''}>Medium</option>
                 <option value="HIGH" ${reportPriority == 'HIGH' ? 'selected' : ''}>High</option>
             </select>
-            <select name="reportStatus" style="padding: 8px;">
+            <select name="reportStatus" class="filter-select">
                 <option value="">All Statuses</option>
                 <option value="PENDING" ${reportStatus == 'PENDING' ? 'selected' : ''}>Pending</option>
                 <option value="ASSIGNED" ${reportStatus == 'ASSIGNED' ? 'selected' : ''}>Assigned</option>
                 <option value="IN_PROGRESS" ${reportStatus == 'IN_PROGRESS' ? 'selected' : ''}>In Progress</option>
                 <option value="COMPLETED" ${reportStatus == 'COMPLETED' ? 'selected' : ''}>Completed</option>
             </select>
-            <button type="submit">Filter</button>
-            <a href="<%= request.getRequestURI() %>">Clear</a>
+            <button type="submit" class="btn-filter">Filter</button>
+            <a href="<%= request.getRequestURI() %>" class="btn-clear">Clear</a>
         </form>
         <c:choose>
             <c:when test="${empty myReports}">

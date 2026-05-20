@@ -89,12 +89,12 @@
     }
     .nav-ghost:hover { background: rgba(255, 255, 255, 0.15); transform: translateY(-1px); }
     .nav-button {
-        background: #f7c948;
-        color: #1f2d24;
-        border-color: #f7c948;
-        box-shadow: 0 6px 16px rgba(247, 201, 72, 0.35);
+        background: linear-gradient(135deg, var(--nav-leaf) 0%, #1a6e55 100%);
+        color: var(--nav-white);
+        border-color: var(--nav-leaf);
+        box-shadow: 0 6px 16px rgba(31, 122, 92, 0.35);
     }
-    .nav-button:hover { background: #ffdd6e; transform: translateY(-1px); }
+    .nav-button:hover { background: linear-gradient(135deg, #26906b 0%, #1c775a 100%); transform: translateY(-1px); }
     .nav-user {
         font-size: 14px;
         opacity: 0.85;

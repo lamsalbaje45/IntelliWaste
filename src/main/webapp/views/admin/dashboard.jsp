@@ -170,6 +170,51 @@
 <head>
     <title>Admin Dashboard - IntelliWaste</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        .filter-bar {
+            margin-bottom: 12px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+        }
+        .filter-input,
+        .filter-select {
+            padding: 8px 10px;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            background: #fff;
+            min-height: 36px;
+        }
+        .filter-input {
+            min-width: 220px;
+        }
+        .btn-filter {
+            background: #2d5f3f;
+            color: #fff;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .btn-clear {
+            color: #2d5f3f;
+            background: #eef6f0;
+            border: 1px solid #cfe3d6;
+            padding: 8px 14px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .btn-clear:hover {
+            background: #e4f0e8;
+        }
+    </style>
 </head>
 <body>
 <jsp:include page="../navbar.jsp"/>
@@ -214,30 +259,30 @@
     <!-- All reports table -->
     <div style="background: white; padding: 24px; border-radius: 6px;">
         <h2 style="margin-top: 0; color: #2d5f3f;">All Waste Reports</h2>
-        <form method="get" action="<%= request.getRequestURI() %>" style="margin-bottom: 12px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+        <form method="get" action="<%= request.getRequestURI() %>" class="filter-bar">
             <input type="hidden" name="usersPage" value="${usersPage}" />
-            <input type="text" name="reportSearch" value="${reportSearch}" placeholder="Search reports..." style="padding: 8px; min-width: 220px;" />
-            <select name="reportCategory" style="padding: 8px;">
+            <input type="text" name="reportSearch" value="${reportSearch}" placeholder="Search reports..." class="filter-input" />
+            <select name="reportCategory" class="filter-select">
                 <option value="">All Categories</option>
                 <c:forEach var="cat" items="${reportCategoryOptions}">
                     <option value="${cat}" ${cat == reportCategory ? 'selected' : ''}>${cat}</option>
                 </c:forEach>
             </select>
-            <select name="reportPriority" style="padding: 8px;">
+            <select name="reportPriority" class="filter-select">
                 <option value="">All Priorities</option>
                 <option value="LOW" ${reportPriority == 'LOW' ? 'selected' : ''}>Low</option>
                 <option value="MEDIUM" ${reportPriority == 'MEDIUM' ? 'selected' : ''}>Medium</option>
                 <option value="HIGH" ${reportPriority == 'HIGH' ? 'selected' : ''}>High</option>
             </select>
-            <select name="reportStatus" style="padding: 8px;">
+            <select name="reportStatus" class="filter-select">
                 <option value="">All Statuses</option>
                 <option value="PENDING" ${reportStatus == 'PENDING' ? 'selected' : ''}>Pending</option>
                 <option value="ASSIGNED" ${reportStatus == 'ASSIGNED' ? 'selected' : ''}>Assigned</option>
                 <option value="IN_PROGRESS" ${reportStatus == 'IN_PROGRESS' ? 'selected' : ''}>In Progress</option>
                 <option value="COMPLETED" ${reportStatus == 'COMPLETED' ? 'selected' : ''}>Completed</option>
             </select>
-            <button type="submit">Filter</button>
-            <a href="<%= request.getRequestURI() %>">Clear</a>
+            <button type="submit" class="btn-filter">Filter</button>
+            <a href="<%= request.getRequestURI() %>" class="btn-clear">Clear</a>
         </form>
         <c:choose>
             <c:when test="${empty allReports}">
@@ -335,17 +380,17 @@
     <!-- User management -->
     <div style="background: white; padding: 24px; border-radius: 6px; margin-top: 24px;">
         <h2 style="margin-top: 0; color: #2d5f3f;">User Management</h2>
-        <form method="get" action="<%= request.getRequestURI() %>" style="margin-bottom: 12px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+        <form method="get" action="<%= request.getRequestURI() %>" class="filter-bar">
             <input type="hidden" name="reportsPage" value="${reportsPage}" />
-            <input type="text" name="userSearch" value="${userSearch}" placeholder="Search users..." style="padding: 8px; min-width: 220px;" />
-            <select name="userRole" style="padding: 8px;">
+            <input type="text" name="userSearch" value="${userSearch}" placeholder="Search users..." class="filter-input" />
+            <select name="userRole" class="filter-select">
                 <option value="">All Roles</option>
                 <option value="ADMIN" ${userRole == 'ADMIN' ? 'selected' : ''}>Admin</option>
                 <option value="WORKER" ${userRole == 'WORKER' ? 'selected' : ''}>Worker</option>
                 <option value="USER" ${userRole == 'USER' ? 'selected' : ''}>Citizen</option>
             </select>
-            <button type="submit">Filter</button>
-            <a href="<%= request.getRequestURI() %>">Clear</a>
+            <button type="submit" class="btn-filter">Filter</button>
+            <a href="<%= request.getRequestURI() %>" class="btn-clear">Clear</a>
         </form>
         <c:choose>
             <c:when test="${empty allUsers}">

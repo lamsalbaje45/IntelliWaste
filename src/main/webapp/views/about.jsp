@@ -4,6 +4,7 @@ String ctx = request.getContextPath(); %>
 <html>
   <head>
     <title>About - IntelliWaste</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
       .about-hero {
         margin: 24px 0 18px;
@@ -69,6 +70,9 @@ String ctx = request.getContextPath(); %>
         }
         .about-hero h1 {
           font-size: 28px;
+        }
+        .about-panel {
+          padding: 18px;
         }
       }
     </style>

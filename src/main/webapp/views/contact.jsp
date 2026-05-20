@@ -7,6 +7,7 @@
 <html>
   <head>
     <title>Contact - IntelliWaste</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
       .contact-hero {
         margin: 24px 0 18px;
@@ -68,6 +69,8 @@
       }
       @media (max-width: 720px) {
         .contact-hero { padding: 20px; }
+        .contact-form { padding: 18px; }
+        .contact-form button { width: 100%; }
       }
     </style>
   </head>

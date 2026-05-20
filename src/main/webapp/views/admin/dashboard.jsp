@@ -284,6 +284,62 @@
             background-repeat: no-repeat;
             padding-right: 34px;
         }
+        @media (max-width: 720px) {
+            .responsive-stack {
+                border: 0;
+                min-width: 0;
+                width: 100%;
+                max-width: 100%;
+                table-layout: fixed;
+            }
+            .responsive-table.responsive-stack {
+                min-width: 0;
+                width: 100%;
+                max-width: 100%;
+            }
+            .table-wrap {
+                overflow-x: hidden;
+            }
+            .responsive-stack tr {
+                display: block;
+                border: 1px solid #e5e7eb;
+                border-radius: 10px;
+                margin-bottom: 12px;
+                padding: 10px 12px;
+                background: #fff;
+            }
+            .responsive-stack tr:first-child {
+                display: none;
+            }
+            .responsive-stack td {
+                display: grid;
+                grid-template-columns: 110px 1fr;
+                column-gap: 12px;
+                align-items: start;
+                padding: 8px 0;
+                border: 0;
+                white-space: normal;
+                word-break: break-word;
+                overflow-wrap: anywhere;
+            }
+            .responsive-stack td::before {
+                content: attr(data-label);
+                font-weight: 600;
+                color: #2d5f3f;
+                min-width: 0;
+            }
+            .responsive-stack td > * {
+                min-width: 0;
+            }
+            .responsive-stack .action-col {
+                width: auto;
+                min-width: 0;
+            }
+            .responsive-stack .action-cell,
+            .responsive-stack .user-action {
+                align-items: stretch;
+            }
+        }
     </style>
 </head>
 <body>
@@ -360,7 +416,7 @@
             </c:when>
             <c:otherwise>
                 <div class="table-wrap">
-                    <table class="responsive-table" border="1" cellpadding="8">
+                    <table class="responsive-table responsive-stack" border="1" cellpadding="8">
                         <tr style="background: #f0f0f0;">
                         <th>ID</th>
                         <th>Reporter</th>
@@ -373,14 +429,14 @@
                         </tr>
                         <c:forEach var="r" items="${allReports}">
                             <tr>
-                            <td>${r.report_id}</td>
-                            <td>${r.user_name}</td>
-                            <td>${r.category_name}</td>
-                            <td class="location-col" title="${r.location}">${r.location}</td>
-                            <td>${r.priority}</td>
-                            <td>${r.status}</td>
-                            <td>${r.created_at}</td>
-                            <td class="action-col">
+                            <td data-label="ID">${r.report_id}</td>
+                            <td data-label="Reporter">${r.user_name}</td>
+                            <td data-label="Category">${r.category_name}</td>
+                            <td class="location-col" data-label="Location" title="${r.location}">${r.location}</td>
+                            <td data-label="Priority">${r.priority}</td>
+                            <td data-label="Status">${r.status}</td>
+                            <td data-label="Reported">${r.created_at}</td>
+                            <td class="action-col" data-label="Action">
                                 <div class="action-cell">
                                     <c:if test="${r.status == 'PENDING'}">
                                         <form action="<%= ctx %>/assignReport" method="post" class="assign-form vertical action-row">
@@ -480,7 +536,7 @@
             </c:when>
             <c:otherwise>
                 <div class="table-wrap">
-                    <table class="responsive-table" border="1" cellpadding="8">
+                    <table class="responsive-table responsive-stack" border="1" cellpadding="8">
                         <tr style="background: #f0f0f0;">
                         <th>ID</th>
                         <th>Name</th>
@@ -491,12 +547,12 @@
                         </tr>
                         <c:forEach var="usr" items="${allUsers}">
                             <tr>
-                            <td>${usr.id}</td>
-                            <td>${usr.name}</td>
-                            <td>${usr.email}</td>
-                            <td>${usr.role}</td>
-                            <td>${usr.phone}</td>
-                            <td>
+                            <td data-label="ID">${usr.id}</td>
+                            <td data-label="Name">${usr.name}</td>
+                            <td data-label="Email">${usr.email}</td>
+                            <td data-label="Role">${usr.role}</td>
+                            <td data-label="Phone">${usr.phone}</td>
+                            <td data-label="Action">
                                 <c:choose>
                                     <c:when test="${usr.role == 'ADMIN'}">
                                         <span style="color: #666;">Admin</span>

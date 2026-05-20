@@ -14,12 +14,19 @@
         --nav-white: #ffffff;
     }
 
+    *, *::before, *::after {
+        box-sizing: border-box;
+    }
+    html, body {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
     body:not(.home-page) {
         font-family: "Space Grotesk", "Segoe UI", sans-serif;
         margin: 0;
         background: #f5f7f6;
     }
-    .container { padding: 24px; max-width: 1200px; margin: 0 auto; }
+    .container { padding: 24px; max-width: 1200px; margin: 0 auto; width: 100%; box-sizing: border-box; }
     .alert-success { background: #d3f9d8; color: #1f6b4f; padding: 12px; border-radius: 8px; margin-bottom: 16px; }
     .alert-error   { background: #ffe0e0; color: #c92a2a; padding: 12px; border-radius: 8px; margin-bottom: 16px; }
     .stats-row { display: flex; gap: 16px; margin: 24px 0; flex-wrap: wrap; }
@@ -80,6 +87,15 @@
         border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         position: relative;
         z-index: 2;
+        box-sizing: border-box;
+    }
+    .nav-menu {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 16px;
+        flex: 1;
+        box-sizing: border-box;
     }
     .nav-left, .nav-right {
         display: flex;
@@ -137,15 +153,111 @@
         font-size: 14px;
         opacity: 0.85;
     }
+    .nav-toggle {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 38px;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--nav-white);
+        cursor: pointer;
+    }
+    .nav-toggle span {
+        display: block;
+        width: 20px;
+        height: 2px;
+        background: currentColor;
+        position: relative;
+    }
+    .nav-toggle span::before,
+    .nav-toggle span::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        width: 20px;
+        height: 2px;
+        background: currentColor;
+    }
+    .nav-toggle span::before { top: -6px; }
+    .nav-toggle span::after { top: 6px; }
 
     @media (max-width: 900px) {
         .stat-card { flex: 1 1 220px; }
+    }
+    @media (max-width: 860px) {
+        .navbar {
+            flex-wrap: wrap;
+            padding: 12px 18px;
+        }
+        .nav-toggle {
+            display: inline-flex;
+            margin-left: auto;
+        }
+        .nav-menu {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 100%;
+            width: 100%;
+            flex-direction: column;
+            align-items: stretch;
+            padding-top: 12px;
+            padding-left: 18px;
+            padding-right: 18px;
+            padding-bottom: 12px;
+            background: linear-gradient(180deg, rgba(15, 61, 46, 0.98) 0%, rgba(11, 43, 34, 0.98) 100%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            pointer-events: none;
+            transition: max-height 0.25s ease, opacity 0.2s ease;
+            z-index: 1;
+        }
+        .navbar.nav-open .nav-menu {
+            max-height: 600px;
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .nav-menu {
+            display: flex;
+        }
+        .nav-menu .nav-left,
+        .nav-menu .nav-right {
+            width: 100%;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 10px;
+        }
+        .nav-menu .nav-left a,
+        .nav-menu .nav-right a,
+        .nav-menu .nav-right button {
+            width: 100%;
+            justify-content: flex-start;
+        }
+        .nav-pill {
+            background: rgba(255, 255, 255, 0.16);
+        }
+        .nav-user {
+            padding: 6px 2px;
+        }
+        .nav-right form { width: 100%; }
     }
     @media (max-width: 720px) {
         .container { padding: 18px; }
         .stat-card { flex: 1 1 100%; }
         .form-grid { grid-template-columns: 1fr; }
         .responsive-table { min-width: 640px; }
+        .filter-bar { flex-direction: column; align-items: stretch; }
+        .filter-input,
+        .filter-select,
+        .action-select { width: 100%; min-width: 0; }
+        .action-row { flex-wrap: wrap; }
+        .action-col { width: auto; min-width: 180px; }
+        .location-col { max-width: none; white-space: normal; }
     }
     @media (max-width: 640px) {
         .responsive-table { min-width: 560px; }
@@ -161,29 +273,56 @@
             <img class="brand-logo" src="<%= navCtx %>/assets/Logo.png" alt="IntelliWaste logo" />
             <span>IntelliWaste</span>
         </a>
-        <a class="nav-pill" href="<%= navCtx %>/views/about.jsp">About</a>
-        <a class="nav-pill" href="<%= navCtx %>/views/contact.jsp">Contact</a>
-        <% if (navUser != null) {
-            String role = navUser.getRole();
-            String dash = "ADMIN".equals(role)  ? "/views/admin/dashboard.jsp"
-                       : "WORKER".equals(role) ? "/views/worker/dashboard.jsp"
-                       :                          "/views/user/dashboard.jsp";
-        %>
-            <a class="nav-pill" href="<%= navCtx + dash %>">Home</a>
-            <a class="nav-pill" href="<%= navCtx %>/views/profile.jsp">My Profile</a>
-            <a class="nav-pill" href="<%= navCtx %>/viewReports">All Reports</a>
-        <% } %>
     </div>
-    <div class="nav-right">
-        <% if (navUser != null) { %>
-            <span class="nav-user">Welcome, <%= navUser.getName() %> (<%= navUser.getRole() %>)</span>
-            <form action="<%= navCtx %>/user-auth" method="post">
-                <input type="hidden" name="action" value="logout"/>
-                <button class="nav-ghost" type="submit">Logout</button>
-            </form>
-        <% } else { %>
-            <a class="nav-ghost" href="<%= navCtx %>/views/login.jsp">Login</a>
-            <a class="nav-button" href="<%= navCtx %>/views/register.jsp">Register</a>
-        <% } %>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="navMenu" aria-label="Toggle navigation">
+        <span></span>
+    </button>
+    <div class="nav-menu" id="navMenu">
+        <div class="nav-left">
+            <a class="nav-pill" href="<%= navCtx %>/views/about.jsp">About</a>
+            <a class="nav-pill" href="<%= navCtx %>/views/contact.jsp">Contact</a>
+            <% if (navUser != null) {
+                String role = navUser.getRole();
+                String dash = "ADMIN".equals(role)  ? "/views/admin/dashboard.jsp"
+                           : "WORKER".equals(role) ? "/views/worker/dashboard.jsp"
+                           :                          "/views/user/dashboard.jsp";
+            %>
+                <a class="nav-pill" href="<%= navCtx + dash %>">Home</a>
+                <a class="nav-pill" href="<%= navCtx %>/views/profile.jsp">My Profile</a>
+                <a class="nav-pill" href="<%= navCtx %>/viewReports">All Reports</a>
+            <% } %>
+        </div>
+        <div class="nav-right">
+            <% if (navUser != null) { %>
+                <span class="nav-user">Welcome, <%= navUser.getName() %> (<%= navUser.getRole() %>)</span>
+                <form action="<%= navCtx %>/user-auth" method="post">
+                    <input type="hidden" name="action" value="logout"/>
+                    <button class="nav-ghost" type="submit">Logout</button>
+                </form>
+            <% } else { %>
+                <a class="nav-ghost" href="<%= navCtx %>/views/login.jsp">Login</a>
+                <a class="nav-button" href="<%= navCtx %>/views/register.jsp">Register</a>
+            <% } %>
+        </div>
     </div>
 </div>
+
+<script>
+    (function () {
+        var navbar = document.querySelector(".navbar");
+        if (!navbar) { return; }
+        var toggle = navbar.querySelector(".nav-toggle");
+        var menu = navbar.querySelector("#navMenu");
+        if (!toggle || !menu) { return; }
+        toggle.addEventListener("click", function () {
+            var isOpen = navbar.classList.toggle("nav-open");
+            toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+        });
+        menu.addEventListener("click", function (event) {
+            if (event.target && event.target.tagName === "A") {
+                navbar.classList.remove("nav-open");
+                toggle.setAttribute("aria-expanded", "false");
+            }
+        });
+    })();
+</script>

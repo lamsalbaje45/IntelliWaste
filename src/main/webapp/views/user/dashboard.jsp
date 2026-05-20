@@ -148,6 +148,53 @@
         .btn-clear:hover {
             background: #e4f0e8;
         }
+        @media (max-width: 720px) {
+            .filter-bar { flex-direction: column; align-items: stretch; }
+            .filter-input,
+            .filter-select { width: 100%; min-width: 0; }
+            .table-wrap { overflow-x: hidden; }
+            .responsive-stack {
+                border: 0;
+                min-width: 0;
+                width: 100%;
+                max-width: 100%;
+                table-layout: fixed;
+            }
+            .responsive-table.responsive-stack {
+                min-width: 0;
+                width: 100%;
+                max-width: 100%;
+            }
+            .responsive-stack tr {
+                display: block;
+                border: 1px solid #e5e7eb;
+                border-radius: 10px;
+                margin-bottom: 12px;
+                padding: 10px 12px;
+                background: #fff;
+            }
+            .responsive-stack tr:first-child {
+                display: none;
+            }
+            .responsive-stack td {
+                display: grid;
+                grid-template-columns: 110px 1fr;
+                column-gap: 12px;
+                align-items: start;
+                padding: 8px 0;
+                border: 0;
+                white-space: normal;
+                word-break: break-word;
+                overflow-wrap: anywhere;
+            }
+            .responsive-stack td::before {
+                content: attr(data-label);
+                font-weight: 600;
+                color: #2d5f3f;
+                min-width: 0;
+            }
+            .responsive-stack td > * { min-width: 0; }
+        }
     </style>
 </head>
 <body>
@@ -261,7 +308,7 @@
             </c:when>
             <c:otherwise>
                 <div class="table-wrap">
-                    <table class="responsive-table" border="1" cellpadding="8">
+                    <table class="responsive-table responsive-stack" border="1" cellpadding="8">
                         <tr style="background: #f0f0f0;">
                         <th>ID</th>
                         <th>Category</th>
@@ -273,13 +320,13 @@
                         </tr>
                         <c:forEach var="r" items="${myReports}">
                             <tr>
-                            <td>${r.report_id}</td>
-                            <td>${r.category_name}</td>
-                            <td>${r.location}</td>
-                            <td>${r.priority}</td>
-                            <td>${r.status}</td>
-                            <td>${r.created_at}</td>
-                            <td>
+                            <td data-label="ID">${r.report_id}</td>
+                            <td data-label="Category">${r.category_name}</td>
+                            <td data-label="Location">${r.location}</td>
+                            <td data-label="Priority">${r.priority}</td>
+                            <td data-label="Status">${r.status}</td>
+                            <td data-label="Reported">${r.created_at}</td>
+                            <td data-label="Action">
                                 <span class="action-cell">
                                     <a class="btn-action" href="<%= ctx %>/viewReportById?id=${r.report_id}">View</a>
                                     <c:if test="${r.status == 'PENDING'}">

@@ -24,6 +24,10 @@ public class UpdateReportStatusServlet extends HttpServlet {
             response.sendRedirect(ctx + "/views/login.jsp");
             return;
         }
+        if (!"ADMIN".equals(user.getRole())) {
+            response.sendRedirect(ctx + "/views/error.jsp?code=403");
+            return;
+        }
 
         try {
             int reportId = Integer.parseInt(request.getParameter("id"));
@@ -39,6 +43,11 @@ public class UpdateReportStatusServlet extends HttpServlet {
         } catch (NumberFormatException e) {
             session.setAttribute("error", "Invalid report identifier");
         }
-        response.sendRedirect(ctx + "/viewReports");
+        String returnTarget = request.getParameter("return");
+        if ("admin".equals(returnTarget)) {
+            response.sendRedirect(ctx + "/views/admin/dashboard.jsp");
+        } else {
+            response.sendRedirect(ctx + "/viewReports");
+        }
     }
 }

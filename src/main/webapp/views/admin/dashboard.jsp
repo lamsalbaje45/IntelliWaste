@@ -218,11 +218,18 @@
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-            gap: 8px;
+            gap: 10px;
         }
         .action-col {
-            width: 210px;
-            min-width: 210px;
+            width: 220px;
+            min-width: 220px;
+            white-space: nowrap;
+        }
+        .location-col {
+            width: 240px;
+            max-width: 240px;
+            overflow: hidden;
+            text-overflow: ellipsis;
             white-space: nowrap;
         }
         .assign-form {
@@ -230,11 +237,26 @@
             flex-direction: column;
             gap: 8px;
         }
+        .action-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: nowrap;
+        }
+        .assign-form.vertical,
+        .status-form.vertical {
+            flex-direction: row;
+            align-items: center;
+            gap: 8px;
+        }
         .action-buttons {
             display: inline-flex;
             align-items: center;
             gap: 8px;
             flex-wrap: nowrap;
+            align-self: flex-end;
+            width: 100%;
+            justify-content: flex-end;
         }
         .user-action {
             display: inline-flex;
@@ -248,7 +270,7 @@
             border-radius: 6px;
             background: #fff;
             min-height: 36px;
-            min-width: 120px;
+            width: 120px;
             appearance: none;
             background-image:
                 linear-gradient(45deg, transparent 50%, #2d5f3f 50%),
@@ -343,7 +365,7 @@
                         <th>ID</th>
                         <th>Reporter</th>
                         <th>Category</th>
-                        <th>Location</th>
+                        <th class="location-col">Location</th>
                         <th>Priority</th>
                         <th>Status</th>
                         <th>Reported</th>
@@ -354,14 +376,14 @@
                             <td>${r.report_id}</td>
                             <td>${r.user_name}</td>
                             <td>${r.category_name}</td>
-                            <td>${r.location}</td>
+                            <td class="location-col" title="${r.location}">${r.location}</td>
                             <td>${r.priority}</td>
                             <td>${r.status}</td>
                             <td>${r.created_at}</td>
                             <td class="action-col">
                                 <div class="action-cell">
                                     <c:if test="${r.status == 'PENDING'}">
-                                        <form action="<%= ctx %>/assignReport" method="post" class="assign-form">
+                                        <form action="<%= ctx %>/assignReport" method="post" class="assign-form vertical action-row">
                                             <input type="hidden" name="report_id" value="${r.report_id}"/>
                                             <select name="worker_id" required class="action-select">
                                                 <option value="">Worker</option>
@@ -369,17 +391,24 @@
                                                     <option value="${w.id}">${w.name}</option>
                                                 </c:forEach>
                                             </select>
-                                            <div class="action-buttons">
-                                                <button class="btn-action" type="submit">Assign</button>
-                                                <a class="btn-action" href="<%= ctx %>/viewReportById?id=${r.report_id}">View</a>
-                                            </div>
+                                            <button class="btn-action" type="submit">Assign</button>
                                         </form>
                                     </c:if>
-                                    <c:if test="${r.status != 'PENDING'}">
-                                        <div class="action-buttons">
-                                            <a class="btn-action" href="<%= ctx %>/viewReportById?id=${r.report_id}">View</a>
-                                        </div>
-                                    </c:if>
+                                    <form action="<%= ctx %>/updateReportStatus" method="post" class="assign-form vertical status-form action-row">
+                                        <input type="hidden" name="id" value="${r.report_id}"/>
+                                        <input type="hidden" name="return" value="admin"/>
+                                        <select name="status" class="action-select" required>
+                                            <option value="PENDING" ${r.status == 'PENDING' ? 'selected' : ''}>Pending</option>
+                                            <option value="ASSIGNED" ${r.status == 'ASSIGNED' ? 'selected' : ''}>Assigned</option>
+                                            <option value="IN_PROGRESS" ${r.status == 'IN_PROGRESS' ? 'selected' : ''}>In Progress</option>
+                                            <option value="COMPLETED" ${r.status == 'COMPLETED' ? 'selected' : ''}>Completed</option>
+                                            <option value="REJECTED" ${r.status == 'REJECTED' ? 'selected' : ''}>Rejected</option>
+                                        </select>
+                                        <button class="btn-action" type="submit">Update</button>
+                                    </form>
+                                    <div class="action-buttons">
+                                        <a class="btn-action" href="<%= ctx %>/viewReportById?id=${r.report_id}">View</a>
+                                    </div>
                                 </div>
                             </td>
                             </tr>

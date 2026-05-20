@@ -5,6 +5,7 @@ String ctx = request.getContextPath(); %>
   <head>
     <title>IntelliWaste — Smart Waste Management System</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8">
     <style>
       @import url("https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Space+Grotesk:wght@400;500;600;700&display=swap");
 

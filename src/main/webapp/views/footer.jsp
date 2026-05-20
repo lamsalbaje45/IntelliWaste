@@ -209,7 +209,7 @@
 
     <div class="footer-bottom">
       <div>
-        © 2026 IntelliWaste — Smart Waste Management System | Team IntelliWaste
+        &copy; 2026 IntelliWaste &ndash; Smart Waste Management System | Team IntelliWaste
       </div>
     </div>
   </div>

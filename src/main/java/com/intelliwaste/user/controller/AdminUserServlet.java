@@ -31,12 +31,6 @@ public class AdminUserServlet extends HttpServlet {
         }
 
         String action = request.getParameter("action");
-        if (!"updateRole".equals(action)) {
-            response.sendRedirect(request.getContextPath() + "/views/admin/dashboard.jsp");
-            return;
-        }
-
-        String role = request.getParameter("role");
         String userIdRaw = request.getParameter("user_id");
         if (userIdRaw == null || userIdRaw.trim().isEmpty()) {
             session.setAttribute("error", "Invalid user identifier");
@@ -44,19 +38,33 @@ public class AdminUserServlet extends HttpServlet {
             return;
         }
 
-        if (!"USER".equals(role) && !"WORKER".equals(role)) {
-            session.setAttribute("error", "Invalid role selection");
-            response.sendRedirect(request.getContextPath() + "/views/admin/dashboard.jsp");
-            return;
-        }
-
         int userId = Integer.parseInt(userIdRaw);
         UserDAO userDAO = new UserDAO();
-        boolean updated = userDAO.updateUserRole(userId, role);
-        if (updated) {
-            session.setAttribute("success", "User role updated successfully");
+
+        if ("updateRole".equals(action)) {
+            String role = request.getParameter("role");
+            if (!"USER".equals(role) && !"WORKER".equals(role)) {
+                session.setAttribute("error", "Invalid role selection");
+                response.sendRedirect(request.getContextPath() + "/views/admin/dashboard.jsp");
+                return;
+            }
+
+            boolean updated = userDAO.updateUserRole(userId, role);
+            if (updated) {
+                session.setAttribute("success", "User role updated successfully");
+            } else {
+                session.setAttribute("error", "Failed to update user role");
+            }
+        } else if ("deleteUser".equals(action)) {
+            boolean deleted = userDAO.deleteUser(userId);
+            if (deleted) {
+                session.setAttribute("success", "User deleted successfully");
+            } else {
+                session.setAttribute("error", "Failed to delete user");
+            }
         } else {
-            session.setAttribute("error", "Failed to update user role");
+            response.sendRedirect(request.getContextPath() + "/views/admin/dashboard.jsp");
+            return;
         }
 
         response.sendRedirect(request.getContextPath() + "/views/admin/dashboard.jsp");

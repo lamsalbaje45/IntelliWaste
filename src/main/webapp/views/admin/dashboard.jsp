@@ -242,6 +242,9 @@
             gap: 8px;
             flex-wrap: wrap;
         }
+        .btn-danger {
+            background: #c92a2a;
+        }
         .btn-action {
             background: #2d5f3f;
             color: #fff;
@@ -489,15 +492,22 @@
                                         <span style="color: #666;">Admin</span>
                                     </c:when>
                                     <c:otherwise>
-                                        <form action="<%= ctx %>/admin/users" method="post" style="display:inline;">
-                                            <input type="hidden" name="action" value="updateRole" />
-                                            <input type="hidden" name="user_id" value="${usr.id}" />
-                                            <select name="role" required class="action-select">
-                                                <option value="USER" ${usr.role == 'USER' ? 'selected' : ''}>Citizen</option>
-                                                <option value="WORKER" ${usr.role == 'WORKER' ? 'selected' : ''}>Worker</option>
-                                            </select>
-                                            <button type="submit" class="btn-action">Update</button>
-                                        </form>
+                                        <div class="user-action">
+                                            <form action="<%= ctx %>/admin/users" method="post" style="display:inline;">
+                                                <input type="hidden" name="action" value="updateRole" />
+                                                <input type="hidden" name="user_id" value="${usr.id}" />
+                                                <select name="role" required class="action-select">
+                                                    <option value="USER" ${usr.role == 'USER' ? 'selected' : ''}>Citizen</option>
+                                                    <option value="WORKER" ${usr.role == 'WORKER' ? 'selected' : ''}>Worker</option>
+                                                </select>
+                                                <button type="submit" class="btn-action">Update</button>
+                                            </form>
+                                            <form action="<%= ctx %>/admin/users" method="post" style="display:inline;" onsubmit="return confirm('Delete this user?');">
+                                                <input type="hidden" name="action" value="deleteUser" />
+                                                <input type="hidden" name="user_id" value="${usr.id}" />
+                                                <button type="submit" class="btn-action btn-danger">Delete</button>
+                                            </form>
+                                        </div>
                                     </c:otherwise>
                                 </c:choose>
                             </td>

@@ -24,7 +24,81 @@
     Map<String, Integer> stats = reportDao.countByStatusForUser(u.getId());
 
     String ctx = request.getContextPath();
-    request.setAttribute("myReports", myReports);
+
+    String reportSearch = request.getParameter("reportSearch");
+    String reportCategory = request.getParameter("reportCategory");
+    String reportPriority = request.getParameter("reportPriority");
+    String reportStatus = request.getParameter("reportStatus");
+
+    if (reportSearch == null) { reportSearch = ""; }
+    if (reportCategory == null) { reportCategory = ""; }
+    if (reportPriority == null) { reportPriority = ""; }
+    if (reportStatus == null) { reportStatus = ""; }
+
+    String reportSearchLower = reportSearch.trim().toLowerCase();
+    ArrayList<WasteReportDTO> filteredReports = new ArrayList<>();
+    for (WasteReportDTO r : myReports) {
+        boolean matches = true;
+        if (!reportCategory.isEmpty() && !"ALL".equalsIgnoreCase(reportCategory)) {
+            matches = reportCategory.equalsIgnoreCase(r.getCategory_name());
+        }
+        if (matches && !reportPriority.isEmpty() && !"ALL".equalsIgnoreCase(reportPriority)) {
+            matches = reportPriority.equalsIgnoreCase(r.getPriority());
+        }
+        if (matches && !reportStatus.isEmpty() && !"ALL".equalsIgnoreCase(reportStatus)) {
+            matches = reportStatus.equalsIgnoreCase(r.getStatus());
+        }
+        if (matches && !reportSearchLower.isEmpty()) {
+            String location = r.getLocation() == null ? "" : r.getLocation();
+            String description = r.getDescription() == null ? "" : r.getDescription();
+            String categoryName = r.getCategory_name() == null ? "" : r.getCategory_name();
+            String priority = r.getPriority() == null ? "" : r.getPriority();
+            String status = r.getStatus() == null ? "" : r.getStatus();
+            String hay = (r.getReport_id() + " " + location + " " + description + " " + categoryName + " "
+                    + priority + " " + status).toLowerCase();
+            matches = hay.contains(reportSearchLower);
+        }
+        if (matches) {
+            filteredReports.add(r);
+        }
+    }
+
+    int pageSize = 10;
+    int currentPage = 1;
+    String pageParam = request.getParameter("page");
+    if (pageParam != null) {
+        try {
+            currentPage = Integer.parseInt(pageParam);
+        } catch (NumberFormatException ignored) {
+            currentPage = 1;
+        }
+    }
+    if (currentPage < 1) {
+        currentPage = 1;
+    }
+    int total = filteredReports.size();
+    int totalPages = (int) Math.ceil(total / (double) pageSize);
+    if (totalPages == 0) {
+        totalPages = 1;
+    }
+    if (currentPage > totalPages) {
+        currentPage = totalPages;
+    }
+    int startIndex = (currentPage - 1) * pageSize;
+    int endIndex = Math.min(startIndex + pageSize, total);
+    ArrayList<WasteReportDTO> pageItems = new ArrayList<>();
+    if (total > 0) {
+        pageItems = new ArrayList<>(filteredReports.subList(startIndex, endIndex));
+    }
+
+    request.setAttribute("myReports", pageItems);
+    request.setAttribute("page", currentPage);
+    request.setAttribute("totalPages", totalPages);
+    request.setAttribute("total", total);
+    request.setAttribute("reportSearch", reportSearch);
+    request.setAttribute("reportCategory", reportCategory);
+    request.setAttribute("reportPriority", reportPriority);
+    request.setAttribute("reportStatus", reportStatus);
 %>
 <html>
 <head>
@@ -111,6 +185,30 @@
     <!-- My reports table -->
     <div style="background: white; padding: 24px; border-radius: 6px;">
         <h2 style="margin-top: 0; color: #2d5f3f;">My Reports</h2>
+        <form method="get" action="<%= request.getRequestURI() %>" style="margin-bottom: 12px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+            <input type="text" name="reportSearch" value="${reportSearch}" placeholder="Search reports..." style="padding: 8px; min-width: 220px;" />
+            <select name="reportCategory" style="padding: 8px;">
+                <option value="">All Categories</option>
+                <% for (Category c : categories) { %>
+                    <option value="<%= c.getName() %>" <%= c.getName().equalsIgnoreCase(reportCategory) ? "selected" : "" %>><%= c.getName() %></option>
+                <% } %>
+            </select>
+            <select name="reportPriority" style="padding: 8px;">
+                <option value="">All Priorities</option>
+                <option value="LOW" ${reportPriority == 'LOW' ? 'selected' : ''}>Low</option>
+                <option value="MEDIUM" ${reportPriority == 'MEDIUM' ? 'selected' : ''}>Medium</option>
+                <option value="HIGH" ${reportPriority == 'HIGH' ? 'selected' : ''}>High</option>
+            </select>
+            <select name="reportStatus" style="padding: 8px;">
+                <option value="">All Statuses</option>
+                <option value="PENDING" ${reportStatus == 'PENDING' ? 'selected' : ''}>Pending</option>
+                <option value="ASSIGNED" ${reportStatus == 'ASSIGNED' ? 'selected' : ''}>Assigned</option>
+                <option value="IN_PROGRESS" ${reportStatus == 'IN_PROGRESS' ? 'selected' : ''}>In Progress</option>
+                <option value="COMPLETED" ${reportStatus == 'COMPLETED' ? 'selected' : ''}>Completed</option>
+            </select>
+            <button type="submit">Filter</button>
+            <a href="<%= request.getRequestURI() %>">Clear</a>
+        </form>
         <c:choose>
             <c:when test="${empty myReports}">
                 <p>You have not filed any waste reports yet.</p>
@@ -145,6 +243,40 @@
                             </tr>
                         </c:forEach>
                     </table>
+                </div>
+                <c:url var="prevUrl" value="${pageContext.request.requestURI}">
+                    <c:param name="page" value="${page - 1}" />
+                    <c:param name="reportSearch" value="${reportSearch}" />
+                    <c:param name="reportCategory" value="${reportCategory}" />
+                    <c:param name="reportPriority" value="${reportPriority}" />
+                    <c:param name="reportStatus" value="${reportStatus}" />
+                </c:url>
+                <c:url var="nextUrl" value="${pageContext.request.requestURI}">
+                    <c:param name="page" value="${page + 1}" />
+                    <c:param name="reportSearch" value="${reportSearch}" />
+                    <c:param name="reportCategory" value="${reportCategory}" />
+                    <c:param name="reportPriority" value="${reportPriority}" />
+                    <c:param name="reportStatus" value="${reportStatus}" />
+                </c:url>
+                <div style="margin-top: 12px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                    <span>Page ${page} of ${totalPages}</span>
+                    <c:choose>
+                        <c:when test="${page > 1}">
+                            <a href="${prevUrl}">Prev</a>
+                        </c:when>
+                        <c:otherwise>
+                            <span style="color: #999;">Prev</span>
+                        </c:otherwise>
+                    </c:choose>
+                    <c:choose>
+                        <c:when test="${page < totalPages}">
+                            <a href="${nextUrl}">Next</a>
+                        </c:when>
+                        <c:otherwise>
+                            <span style="color: #999;">Next</span>
+                        </c:otherwise>
+                    </c:choose>
+                    <span style="color: #666;">Showing ${total == 0 ? 0 : (page - 1) * 10 + 1}-${total < page * 10 ? total : page * 10} of ${total}</span>
                 </div>
             </c:otherwise>
         </c:choose>

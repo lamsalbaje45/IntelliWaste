@@ -3,6 +3,8 @@
 <%@ page import="com.intelliwaste.assignment.model.dao.AssignmentDAO" %>
 <%@ page import="com.intelliwaste.assignment.model.dto.AssignmentDTO" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.LinkedHashSet" %>
+<%@ page import="java.util.Set" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%
     User u = (User) session.getAttribute("user");
@@ -25,7 +27,86 @@
     }
 
     String ctx = request.getContextPath();
-    request.setAttribute("myTasks", myTasks);
+
+    String taskSearch = request.getParameter("taskSearch");
+    String taskCategory = request.getParameter("taskCategory");
+    String taskPriority = request.getParameter("taskPriority");
+    String taskStatus = request.getParameter("taskStatus");
+
+    if (taskSearch == null) { taskSearch = ""; }
+    if (taskCategory == null) { taskCategory = ""; }
+    if (taskPriority == null) { taskPriority = ""; }
+    if (taskStatus == null) { taskStatus = ""; }
+
+    String taskSearchLower = taskSearch.trim().toLowerCase();
+    ArrayList<AssignmentDTO> filteredTasks = new ArrayList<>();
+    Set<String> taskCategoryOptions = new LinkedHashSet<>();
+    for (AssignmentDTO a : myTasks) {
+        if (a.getReport_category() != null && !a.getReport_category().isEmpty()) {
+            taskCategoryOptions.add(a.getReport_category());
+        }
+        boolean matches = true;
+        if (!taskCategory.isEmpty() && !"ALL".equalsIgnoreCase(taskCategory)) {
+            matches = taskCategory.equalsIgnoreCase(a.getReport_category());
+        }
+        if (matches && !taskPriority.isEmpty() && !"ALL".equalsIgnoreCase(taskPriority)) {
+            matches = taskPriority.equalsIgnoreCase(a.getReport_priority());
+        }
+        if (matches && !taskStatus.isEmpty() && !"ALL".equalsIgnoreCase(taskStatus)) {
+            matches = taskStatus.equalsIgnoreCase(a.getStatus());
+        }
+        if (matches && !taskSearchLower.isEmpty()) {
+            String location = a.getReport_location() == null ? "" : a.getReport_location();
+            String description = a.getReport_description() == null ? "" : a.getReport_description();
+            String category = a.getReport_category() == null ? "" : a.getReport_category();
+            String priority = a.getReport_priority() == null ? "" : a.getReport_priority();
+            String status = a.getStatus() == null ? "" : a.getStatus();
+            String hay = (a.getReport_id() + " " + location + " " + description + " " + category + " "
+                    + priority + " " + status).toLowerCase();
+            matches = hay.contains(taskSearchLower);
+        }
+        if (matches) {
+            filteredTasks.add(a);
+        }
+    }
+
+    int pageSize = 10;
+    int currentPage = 1;
+    String pageParam = request.getParameter("page");
+    if (pageParam != null) {
+        try {
+            currentPage = Integer.parseInt(pageParam);
+        } catch (NumberFormatException ignored) {
+            currentPage = 1;
+        }
+    }
+    if (currentPage < 1) {
+        currentPage = 1;
+    }
+    int total = filteredTasks.size();
+    int totalPages = (int) Math.ceil(total / (double) pageSize);
+    if (totalPages == 0) {
+        totalPages = 1;
+    }
+    if (currentPage > totalPages) {
+        currentPage = totalPages;
+    }
+    int startIndex = (currentPage - 1) * pageSize;
+    int endIndex = Math.min(startIndex + pageSize, total);
+    ArrayList<AssignmentDTO> pageItems = new ArrayList<>();
+    if (total > 0) {
+        pageItems = new ArrayList<>(filteredTasks.subList(startIndex, endIndex));
+    }
+
+    request.setAttribute("myTasks", pageItems);
+    request.setAttribute("page", currentPage);
+    request.setAttribute("totalPages", totalPages);
+    request.setAttribute("total", total);
+    request.setAttribute("taskSearch", taskSearch);
+    request.setAttribute("taskCategory", taskCategory);
+    request.setAttribute("taskPriority", taskPriority);
+    request.setAttribute("taskStatus", taskStatus);
+    request.setAttribute("taskCategoryOptions", taskCategoryOptions);
 %>
 <html>
 <head>
@@ -71,6 +152,30 @@
     <!-- Assignments table -->
     <div style="background: white; padding: 24px; border-radius: 6px;">
         <h2 style="margin-top: 0; color: #2d5f3f;">My Assignments</h2>
+        <form method="get" action="<%= request.getRequestURI() %>" style="margin-bottom: 12px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+            <input type="text" name="taskSearch" value="${taskSearch}" placeholder="Search assignments..." style="padding: 8px; min-width: 220px;" />
+            <select name="taskCategory" style="padding: 8px;">
+                <option value="">All Categories</option>
+                <c:forEach var="cat" items="${taskCategoryOptions}">
+                    <option value="${cat}" ${cat == taskCategory ? 'selected' : ''}>${cat}</option>
+                </c:forEach>
+            </select>
+            <select name="taskPriority" style="padding: 8px;">
+                <option value="">All Priorities</option>
+                <option value="LOW" ${taskPriority == 'LOW' ? 'selected' : ''}>Low</option>
+                <option value="MEDIUM" ${taskPriority == 'MEDIUM' ? 'selected' : ''}>Medium</option>
+                <option value="HIGH" ${taskPriority == 'HIGH' ? 'selected' : ''}>High</option>
+            </select>
+            <select name="taskStatus" style="padding: 8px;">
+                <option value="">All Statuses</option>
+                <option value="PENDING" ${taskStatus == 'PENDING' ? 'selected' : ''}>Pending</option>
+                <option value="ACCEPTED" ${taskStatus == 'ACCEPTED' ? 'selected' : ''}>Accepted</option>
+                <option value="COMPLETED" ${taskStatus == 'COMPLETED' ? 'selected' : ''}>Completed</option>
+                <option value="REJECTED" ${taskStatus == 'REJECTED' ? 'selected' : ''}>Rejected</option>
+            </select>
+            <button type="submit">Filter</button>
+            <a href="<%= request.getRequestURI() %>">Clear</a>
+        </form>
         <c:choose>
             <c:when test="${empty myTasks}">
                 <p>You have no assignments yet. The administrator will assign tasks to you when waste reports are filed.</p>
@@ -129,6 +234,40 @@
                             </tr>
                         </c:forEach>
                     </table>
+                </div>
+                <c:url var="prevUrl" value="${pageContext.request.requestURI}">
+                    <c:param name="page" value="${page - 1}" />
+                    <c:param name="taskSearch" value="${taskSearch}" />
+                    <c:param name="taskCategory" value="${taskCategory}" />
+                    <c:param name="taskPriority" value="${taskPriority}" />
+                    <c:param name="taskStatus" value="${taskStatus}" />
+                </c:url>
+                <c:url var="nextUrl" value="${pageContext.request.requestURI}">
+                    <c:param name="page" value="${page + 1}" />
+                    <c:param name="taskSearch" value="${taskSearch}" />
+                    <c:param name="taskCategory" value="${taskCategory}" />
+                    <c:param name="taskPriority" value="${taskPriority}" />
+                    <c:param name="taskStatus" value="${taskStatus}" />
+                </c:url>
+                <div style="margin-top: 12px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                    <span>Page ${page} of ${totalPages}</span>
+                    <c:choose>
+                        <c:when test="${page > 1}">
+                            <a href="${prevUrl}">Prev</a>
+                        </c:when>
+                        <c:otherwise>
+                            <span style="color: #999;">Prev</span>
+                        </c:otherwise>
+                    </c:choose>
+                    <c:choose>
+                        <c:when test="${page < totalPages}">
+                            <a href="${nextUrl}">Next</a>
+                        </c:when>
+                        <c:otherwise>
+                            <span style="color: #999;">Next</span>
+                        </c:otherwise>
+                    </c:choose>
+                    <span style="color: #666;">Showing ${total == 0 ? 0 : (page - 1) * 10 + 1}-${total < page * 10 ? total : page * 10} of ${total}</span>
                 </div>
             </c:otherwise>
         </c:choose>

@@ -30,6 +30,44 @@
     .detail-table { width: 100%; border-collapse: collapse; }
     .detail-table td { vertical-align: top; padding: 8px; }
     .action-stack { display: inline-flex; gap: 6px; flex-wrap: wrap; }
+    .action-cell { display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .btn-action,
+    .btn-filter,
+    .btn-clear,
+    .action-btn {
+        border-radius: 6px;
+        padding: 0 14px;
+        font-weight: 600;
+        border: 1px solid transparent;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 36px;
+        line-height: 36px;
+        text-decoration: none;
+    }
+    .btn-action,
+    .btn-filter,
+    .action-accept {
+        background: #2d5f3f;
+        color: var(--nav-white);
+    }
+    .btn-clear {
+        color: #2d5f3f;
+        background: #eef6f0;
+        border-color: #cfe3d6;
+    }
+    .btn-clear:hover { background: #e4f0e8; }
+    .btn-danger,
+    .action-reject {
+        background: #c92a2a;
+        color: var(--nav-white);
+    }
+    .action-complete {
+        background: #1864ab;
+        color: var(--nav-white);
+    }
 
     .navbar {
         background: linear-gradient(90deg, #0f3d2e 0%, #0b2b22 100%);

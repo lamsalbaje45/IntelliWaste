@@ -224,7 +224,7 @@
                 <label>Photo (optional, max 3MB)</label>
                 <input type="file" name="report_image" accept="image/*" style="margin-top: 4px;"/>
             </div>
-            <button type="submit" style="margin-top: 16px; background: #2d5f3f; color: white; padding: 12px 24px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Submit Report</button>
+            <button type="submit" class="btn-action" style="margin-top: 16px;">Submit Report</button>
         </form>
     </div>
 
@@ -280,11 +280,13 @@
                             <td>${r.status}</td>
                             <td>${r.created_at}</td>
                             <td>
-                                <a href="<%= ctx %>/viewReportById?id=${r.report_id}">View</a>
-                                <c:if test="${r.status == 'PENDING'}">
-                                    | <a href="<%= ctx %>/deleteReport?id=${r.report_id}"
-                                         onclick="return confirm('Delete this report?')">Delete</a>
-                                </c:if>
+                                <span class="action-cell">
+                                    <a class="btn-action" href="<%= ctx %>/viewReportById?id=${r.report_id}">View</a>
+                                    <c:if test="${r.status == 'PENDING'}">
+                                        <a class="btn-action btn-danger" href="<%= ctx %>/deleteReport?id=${r.report_id}"
+                                           onclick="return confirm('Delete this report?')">Delete</a>
+                                    </c:if>
+                                </span>
                             </td>
                             </tr>
                         </c:forEach>

@@ -13,28 +13,6 @@
 <head>
     <title>All Reports - IntelliWaste</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <style>
-        .btn-action {
-            background: #2d5f3f;
-            color: #fff;
-            border: none;
-            padding: 0 14px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            height: 36px;
-            line-height: 36px;
-            min-width: 90px;
-        }
-        .action-cell {
-            display: inline-flex;
-            align-items: center;
-        }
-    </style>
 </head>
 <body>
 <jsp:include page="navbar.jsp"/>

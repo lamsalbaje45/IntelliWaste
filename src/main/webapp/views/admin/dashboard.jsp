@@ -242,25 +242,6 @@
             gap: 8px;
             flex-wrap: wrap;
         }
-        .btn-danger {
-            background: #c92a2a;
-        }
-        .btn-action {
-            background: #2d5f3f;
-            color: #fff;
-            border: none;
-            padding: 0 14px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            height: 36px;
-            line-height: 36px;
-            min-width: 90px;
-        }
         .action-select {
             padding: 8px 10px;
             border: 1px solid #d0d7de;
